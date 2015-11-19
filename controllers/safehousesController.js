@@ -2,7 +2,9 @@ var Safehouse = require('../models/safehouse');
 
 // INDEX
 function getAll(request,response){
-  Safehouse.find(function(error, safehouses){
+  var id = request.user.id;
+
+  Safehouse.find({agents: id}, function(error, safehouse){
     if (error) response.json({message: 'There is no MI6, and there are no safehouses here.'});
 
     response.json({safehouses: safehouses});
@@ -21,9 +23,9 @@ function createSafehouse(request,response){
 
 // SHOW
 function getSafehouse(request, response){
-  var id = request.params.id;
+  var id = request.user.id;
 
-  Safehouse.findOne({_id: id}, function(error, safehouse){
+  Safehouse.findOne({agents: id}, function(error, safehouse){
 
     if(error) { response.status(404).json({message: 'You seem to be mistaken, we have no safehouse with that ID.'}); }
     else if (!safehouse) { response.status(404).json({message: 'You seem to be mistaken, we have no safehouse with that ID.'}); }
